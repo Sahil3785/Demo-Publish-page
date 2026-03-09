@@ -24,6 +24,39 @@ const InstagramIcon = ({ className }) => (
     </svg>
 );
 
+const TruncatableCaption = ({ text, maxLength = 150, platform }) => {
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    if (!text) return null;
+
+    const buttonStyle = {
+        linkedin: "text-gray-500 hover:text-blue-600 hover:underline font-normal cursor-pointer",
+        facebook: "text-gray-900 font-semibold hover:underline cursor-pointer",
+        instagram: "text-gray-400 font-normal cursor-pointer text-[14px]"
+    }[platform] || "text-gray-500 cursor-pointer";
+
+    const buttonText = {
+        linkedin: "...see more",
+        facebook: "See more",
+        instagram: "more"
+    }[platform] || "See more";
+
+    if (text.length <= maxLength || isExpanded) {
+        return <>{text}</>;
+    }
+
+    const separator = platform === 'linkedin' ? "" : "... ";
+
+    return (
+        <>
+            {text.substring(0, maxLength).trim()}{separator}
+            <button onClick={() => setIsExpanded(true)} className={buttonStyle}>
+                {buttonText}
+            </button>
+        </>
+    );
+};
+
 // User provided Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyAjs8qFGZXHzu9uMZGTANuazS7Btm23w8U",
@@ -149,7 +182,7 @@ const App = () => {
                             </div>
                             <div className="px-4 pb-3">
                                 <p className="text-[14px] text-gray-800 leading-normal break-words whitespace-pre-wrap">
-                                    {postData.linkedin_content || postData.content}
+                                    <TruncatableCaption text={postData.linkedin_content || postData.content} maxLength={150} platform="linkedin" />
                                 </p>
                             </div>
                             <div className="w-full bg-gray-100 relative pt-[100%] border-y border-gray-100">
@@ -202,7 +235,7 @@ const App = () => {
                             </div>
                             <div className="px-4 pb-3">
                                 <p className="text-[15px] text-gray-900 break-words whitespace-pre-wrap">
-                                    {postData.facebook_content || postData.content}
+                                    <TruncatableCaption text={postData.facebook_content || postData.content} maxLength={150} platform="facebook" />
                                 </p>
                             </div>
                             <div className="w-full bg-gray-100 border-y border-gray-100">
@@ -268,7 +301,7 @@ const App = () => {
                                 <div className="font-semibold text-[14px] text-gray-900 mb-1 cursor-pointer">2,451 likes</div>
                                 <div className="text-[14px] leading-tight break-words whitespace-pre-wrap">
                                     <span className="font-semibold mr-1 cursor-pointer">yourbrand.official</span>
-                                    {postData.instagram_content || postData.content}
+                                    <TruncatableCaption text={postData.instagram_content || postData.content} maxLength={100} platform="instagram" />
                                 </div>
                                 <div className="text-[13px] text-gray-500 mt-1 cursor-pointer">View all 34 comments</div>
                                 <div className="text-[10px] text-gray-400 uppercase tracking-wide mt-2">2 HOURS AGO</div>
