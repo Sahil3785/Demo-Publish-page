@@ -294,20 +294,22 @@ const App = () => {
                                     </div>
                                 </div>
 
-                                <div className="p-4 bg-slate-900 rounded-xl text-blue-300 font-mono text-xs leading-relaxed">
-                                    <p className="text-slate-500 mb-2">// Copy this exactly into the "Body" (Expression enabled)</p>
+                                <div className="p-4 bg-slate-900 rounded-xl text-blue-300 font-mono text-xs leading-relaxed overflow-x-auto">
+                                    <p className="text-slate-500 mb-2">// Because your captions come from Supabase and contain newlines/quotes, you MUST use an Expression for the ENTIRE body field in n8n to make it valid JSON.</p>
                                     <pre className="select-all">
-                                        {`{
-  "fields": {
-    "linkedin_content": { "stringValue": "This is a custom message exclusively for LinkedIn!" },
-    "facebook_content": { "stringValue": "This is a custom message exclusively for Facebook!" },
-    "instagram_content": { "stringValue": "This is a custom message exclusively for Instagram!" },
-    "linkedin_image": { "stringValue": "{{ $json.image_url }}" },
-    "facebook_image": { "stringValue": "{{ $json.image_url }}" },
-    "instagram_image": { "stringValue": "{{ $json.image_url }}" },
-    "timestamp": { "stringValue": "${new Date().toISOString()}" }
-  }
-}`}
+                                        {`{{
+  JSON.stringify({
+    fields: {
+      linkedin_content: { stringValue: $json.linkedin },
+      facebook_content: { stringValue: $json.facebook },
+      instagram_content: { stringValue: $json.instagram },
+      linkedin_image: { stringValue: $json.image_url },
+      facebook_image: { stringValue: $json.image_url },
+      instagram_image: { stringValue: $json.image_url },
+      timestamp: { stringValue: new Date().toISOString() }
+    }
+  })
+}}`}
                                     </pre>
                                 </div>
                             </div>
